@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Compile C source files with zero effort
+
+print_usage() {
+	printf "Usage: $(basename $0) [ 11 | 90 | 99 ] source_file_without_ext [<link_libraries>]\n"
+	return 2
+}
+execute() {
+	printf "$1\n"
+	$1
+}
+
+if [ ! "$*" ]
+then
+	print_usage
+	exit
+fi
+
+EXT='c'
+COMMAND=
+if [[ -f "$1.$EXT" ]] && [[ ! -f "$2.$EXT" ]]
+then
+	COMMAND="gcc -Wall -Wextra -std=c$(basename $PWD) $1.$EXT -o $1"
+	if [[ "$2" ]]
+	then
+		COMMAND="$COMMAND -l$2"
+	fi
+elif [[ "$1" =~ ^(11|89|99)$ ]] && [[ -f "$2.$EXT" ]]
+then
+	COMMAND="gcc -Wall -Wextra -std=c$1 $2.$EXT -o $2"
+	if [[ "$3" ]]
+	then
+		COMMAND="$COMMAND -l$3"
+	fi
+else
+	print_usage
+	exit
+fi
+
+execute "$COMMAND"

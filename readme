@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Report the executables found in $HOME/bin, and their summary
+
+PERSONAL_BINARIES_PATH="$HOME/bin"
+BINARIES_LISTING=$(ls $PERSONAL_BINARIES_PATH | egrep -v '(~$|/$|\.)')
+README="$PERSONAL_BINARIES_PATH/README.txt"
+
+update_readme() {
+	printf "Updating README..."
+	> $README
+	ls $PERSONAL_BINARIES_PATH | egrep -v '(~$|/$|\.)' | while read binary
+	do
+		binary_desc=$(sed -n '3p' $binary | cut -b '3-')
+		printf "$binary\n\t$binary_desc\n" >> $README
+	done
+	printf "\rDescription updated.\n"
+}
+
+if [[ ! -f $README ]]
+then
+	touch $README
+fi
+
+if [[ "$1" = "-u" ]]
+then
+	update_readme
+	exit
+elif [[ "$1" = "-l" ]]
+then
+	cat $README
+	exit
+fi
+
+README_LISTING=$(egrep '^[[:alnum:]]+' $README)
+if [[ "$README_LISTING" = "$BINARIES_LISTING" ]]
+then
+	printf "README.txt is up to date.\n"
+else
+	printf "Conflicts occurred.\n"
+	read -p 'Update? (yes/no): ' UPDATE_ANSWER 
+	[[ "$UPDATE_ANSWER" =~ ^(y|yes|Yes|YES)$ ]] && update_readme
+fi
