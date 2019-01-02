@@ -11,8 +11,18 @@ fi
 
 if [[ "$1" = "add" ]]
 then
-	printf "$2\n" >> $FUCK_DATABASE
-	printf "\"$2\" added to dirty words.\n"
+	if [[ "$2" ]]
+	then
+		if [[ ! -z $(egrep -i "^$2$" $FUCK_DATABASE) ]]
+		then
+			printf "\"$2\" had already existed.\n"
+			exit
+		fi
+		printf "$2\n" >> $FUCK_DATABASE
+		printf "\"$2\" added to dirty words.\n"
+	else
+		printf "Can't see the dirty word. Can't add. Sorry!\n"
+	fi
 elif [[ "$1" = "list" ]]
 then
 	cat $FUCK_DATABASE
@@ -20,4 +30,6 @@ elif [[ ! "$@" ]]
 then
 	TOTALFUCK=$(cat $FUCK_DATABASE | wc -l)
 	sed -n "$((RANDOM % TOTALFUCK + 1))p" $FUCK_DATABASE
+else
+	printf "Usage: $(basename $0) [add | list]\n"
 fi
