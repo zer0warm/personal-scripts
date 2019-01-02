@@ -21,14 +21,14 @@ EXT='c'
 COMMAND=
 if [[ -f "$1.$EXT" ]] && [[ ! -f "$2.$EXT" ]]
 then
-	COMMAND="gcc -Wall -Wextra -std=c$(basename $PWD) $1.$EXT -o $1"
+	COMMAND="gcc -Wall -Wextra -std=c$(basename $PWD) $1.$EXT -o $1.out"
 	if [[ "$2" ]]
 	then
 		COMMAND="$COMMAND -l$2"
 	fi
 elif [[ "$1" =~ ^(11|89|99)$ ]] && [[ -f "$2.$EXT" ]]
 then
-	COMMAND="gcc -Wall -Wextra -std=c$1 $2.$EXT -o $2"
+	COMMAND="gcc -Wall -Wextra -std=c$1 $2.$EXT -o $2.out"
 	if [[ "$3" ]]
 	then
 		COMMAND="$COMMAND -l$3"
