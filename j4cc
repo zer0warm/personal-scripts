@@ -3,7 +3,7 @@
 # Compile C source files with zero effort
 
 print_usage() {
-	printf "Usage: $(basename $0) [ 11 | 90 | 99 ] source_file_without_ext [<link_libraries>]\n"
+	printf "Usage: $(basename $0) [11 | 90 | 99] source_file_without_ext [<link_libraries>]\n"
 	return 2
 }
 execute() {
