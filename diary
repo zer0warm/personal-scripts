@@ -16,14 +16,14 @@ DIARY_DATE=
 if [[ ! "$@" ]]; then
 	DIARY_DATE="$(date +%d%m%y)"
 elif [ "$1" = "on" ]; then
-	if [[ "$2" =~ ^[0-9][0-9][0-9][0-9][0-9][0-9]$ ]]; then
+	if [[ "$2" =~ ^[0-9]{6}$ ]]; then
 		DIARY_DATE="$2"
 	else
 		printf "Usage: $(basename $0) [ on <ddmmyy> | -l | latest ]\n"
 		exit
 	fi
 elif [[ "$1" = "latest" ]]; then
-	DIARY_DATE=$(ls $DIARY_PATH/*.dry | egrep -o '[0-9]{6}' | sort -r | head -n1)
+	DIARY_DATE=$(ls -t $DIARY_PATH/*.dry | sed -n '1p' | egrep -o '[0-9]{6}')
 else
 	if [ "$1" = "-l" ]; then
 		ls *.dry
