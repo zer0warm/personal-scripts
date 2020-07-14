@@ -1,0 +1,8 @@
+#!/bin/bash
+
+j4e() {
+	local usage=$1 exit_status=$2
+	[[ ! -z $usage ]] && printf "$usage\n"
+	[[ $exit_status = 0 ]] && exit || exit $exit_status
+}
+j4po() { printf "$(basename $0): $1"; }
