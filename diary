@@ -2,57 +2,84 @@
 
 # Manage diaries
 
-DIARY_PATH="$HOME/j4k1ro-stuff/DIARY"
-EDITOR="vim"
+. j4tools
 
-if [ ! -d "$DIARY_PATH" ]; then
-	mkdir -p $DIARY_PATH
-fi
+DIARY_PATH="$HOME/j4k1ro-stuff/diary"
+DIARY_EDITOR="/Applications/MacVim.app/Contents/bin/vim"
+DIARY_USAGE="Usage: $(basename $0) [--path] [on <ddmmyy> | latest | list]"
 
-cd $DIARY_PATH
+# Go to diary "warehouse" for easier interactions
+mkdir -p $DIARY_PATH && cd $DIARY_PATH
 
-DIARY_NAME=
 DIARY_DATE=
-if [[ ! "$@" ]]; then
+PATH_FLAG=
+SUBJ_FLAG=
+if [[ -z "$*" ]]; then
 	DIARY_DATE="$(date +%d%m%y)"
-elif [ "$1" = "on" ]; then
-	if [[ "$2" =~ ^[0-9]{6}$ ]]; then
-		DIARY_DATE="$2"
-	else
-		printf "Usage: $(basename $0) [ on <ddmmyy> | -l | latest ]\n"
-		exit
-	fi
-elif [[ "$1" = "latest" ]]; then
-	DIARY_DATE=$(ls -t $DIARY_PATH/*.dry | sed -n '1p' | egrep -o '[0-9]{6}')
 else
-	if [ "$1" = "-l" ]; then
-		ls *.dry
-		printf "\nTotal: $(ls *.dry | wc -l) diaries\n"
-	else
-		printf "Usage: $(basename $0) [ on <ddmmyy> | -l | latest ]\n"
-	fi
-
-	exit
+	while true; do
+	case $1 in
+		on)
+			[[ $2 =~ ^[0-9]{6}$ ]] && DIARY_DATE=$2 \
+				|| j4e "$DIARY_USAGE" 1
+			break
+			;;
+		latest)
+			DIARY_DATE=`ls -t *.dry | head -1 | grep -o '\d\+'`
+			break
+			;;
+		list|-l)
+			if [[ -n $SUBJ_FLAG ]]; then
+				SUBJ_FLAG=1
+			fi
+			ls -t *.dry
+			j4e "\nTotal: $(ls *.dry | wc -l | bc) diaries." 0
+			;;
+		--path)
+			PATH_FLAG=1
+			shift
+			;;
+		--with-subjects)
+			SUBJ_FLAG=1
+			shift
+			;;
+		help|-h)
+			j4e "$DIARY_USAGE" 0
+			;;
+		*)
+			j4e "$DIARY_USAGE" 1
+			;;
+	esac
+	done
 fi
 
 DIARY_NAME="note$DIARY_DATE.dry"
 
-$EDITOR $DIARY_NAME
+# If file exists, we are modifying its content
+[[ -f "$DIARY_NAME" ]] && MOD_FLAG=1
 
-if [ ! -f "$DIARY_NAME" ]; then
-	printf "Diary discarded. No new file added.\n"
-else
-	DIARY_LASTMODIFIED="$(date +%d%m%y%H%M%S -r $DIARY_NAME)"
-	JUSTNOW="$(date +%d%m%y%H%M%S)"
-
-	if [ "$JUSTNOW" != "$DIARY_LASTMODIFIED" ]; then
-		printf "No modification recorded since last change.\n"
-	# Take advantage of vim creating backup files when modifying existing ones
-	elif [[ -f "$DIARY_NAME~" ]]; then
-		printf "Diary <$DIARY_NAME> had just been modified.\n"
-	else
-		printf "A new diary file had just been added.\n"
-	fi
+# If file exists and --path was issued, print path to file and exit.
+[[ -n $MOD_FLAG && -n $PATH_FLAG ]] && j4e "$DIARY_PATH/$DIARY_NAME" 0
+if [[ -n $PATH_FLAG ]]; then
+	[[ -n $MOD_FLAG ]] && j4e "$DIARY_PATH/$DIARY_NAME" 0 \
+		|| j4e "$(basename $0): No context for --path"
 fi
 
+# Open the diary file
+$DIARY_EDITOR $DIARY_NAME
+
+if [[ -f "$DIARY_NAME" ]]; then
+	# Compare Unix timestamp of the file last modified and current time
+	if [[ "$(date -r $DIARY_NAME +%s)" != "$(date +%s)" ]]; then
+		j4po "No new changes recorded for diary <$DIARY_NAME>.\n"
+	elif [[ ! -z $MOD_FLAG ]]; then
+		j4po "Diary <$DIARY_NAME> had just been updated.\n"
+	else
+		j4po "Diary <$DIARY_NAME> had just been added.\n"
+	fi
+else
+	j4po "Diary <$DIARY_NAME> discarded. No new file added.\n"
+fi
+
+# Get back to where we were at
 cd $OLDPWD

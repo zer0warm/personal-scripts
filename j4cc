@@ -2,40 +2,66 @@
 
 # Compile C source files with zero effort
 
-print_usage() {
-	printf "Usage: $(basename $0) [11 | 90 | 99] source_file_without_ext [<link_libraries>]\n"
-	return 2
+. j4tools
+
+j4cc_usage() {
+	j4e "Usage: $(basename $0) [11|99|89] SOURCE(S) [-oOUTPUT] [-l <library> ...]" 1
 }
-execute() {
-	printf "$1\n"
-	$1
+j4cc_execute() {
+	if [[ $OSTYPE =~ .*darwin.* ]]; then
+		j4po "On apple, \`\`clang\" might be the actual compiler.\n"
+	fi
+
+	local COMMAND=$1
+	printf "$COMMAND\n"
+	$COMMAND
 }
 
-if [ ! "$*" ]
-then
-	print_usage
-	exit
-fi
+# Variations
+# I.  Final command
+#     1. gcc -Wall -Wextra -std=<STDC> *.c -o OUTPUT [-l <libraries> ...]
+# II. Command-line arguments
+#     1. j4cc [<STDC>] *.c [-o OUTPUT] [-l <libraries]
 
-EXT='c'
-COMMAND=
-if [[ -f "$1.$EXT" ]] && [[ ! -f "$2.$EXT" ]]
-then
-	COMMAND="gcc -Wall -Wextra -std=c$(basename $PWD) $1.$EXT -o $1.out"
-	if [[ "$2" ]]
-	then
-		COMMAND="$COMMAND -l$2"
-	fi
-elif [[ "$1" =~ ^(11|89|99)$ ]] && [[ -f "$2.$EXT" ]]
-then
-	COMMAND="gcc -Wall -Wextra -std=c$1 $2.$EXT -o $2.out"
-	if [[ "$3" ]]
-	then
-		COMMAND="$COMMAND -l$3"
-	fi
-else
-	print_usage
-	exit
-fi
+[[ ! "$@" ]] && j4cc_usage
 
-execute "$COMMAND"
+STDC=
+SOURCES=
+LIBS=
+OUTPUT=
+NO_WARNINGS=
+while true; do
+	[[ -z $1 ]] && break
+	case "$1" in
+		17|11|99|90|89)
+			STDC=$1
+			shift ;;
+		*.c)
+			SOURCES="$SOURCES $1"
+			shift ;;
+		-l*)
+			LIBS="$LIBS $1"
+			shift ;;
+		-o*)
+			OUTPUT="$1"
+			shift ;;
+		--no-warn)
+			NO_WARNINGS=1
+			shift ;;
+		*)
+			j4cc_usage ;;
+	esac
+done
+
+[[ -z $SOURCES ]] && j4e "Source file(s) (*.c) is missing."
+[[ -z "$(ls $SOURCES 2> /dev/null)" ]] && j4e "Source file(s) doesn't exist."
+
+COMPILER="/usr/bin/env gcc"
+WARNS=
+[[ -z $NO_WARNING ]] && WARNS="-Wall -Wextra"
+[[ -z $STDC ]] && STDC=11
+[[ -z $OUTPUT ]] && OUTPUT="-o $(echo $SOURCES | cut -f 1 -d .).out"
+
+COMMAND="$COMPILER $WARNS -std=c$STDC $SOURCES $LIBS $OUTPUT"
+
+j4cc_execute "$COMMAND"

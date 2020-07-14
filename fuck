@@ -2,34 +2,38 @@
 
 # Random a line in fuck database
 
+. j4tools
+
+fuck_reply() {
+	local db=$1
+	local total=$(cat $db | wc -l)
+	sed -n "$((RANDOM % total + 1))p" $db
+	exit
+}
+
 FUCK_DATABASE="$HOME/.fuckrc"
+FUCK_USAGE="Usage: $(basename $0) [add | list]"
 
-if [[ ! -f $FUCK_DATABASE ]]
-then
-	printf "Fuck you!\n" > $FUCK_DATABASE
-fi
+[[ ! -f $FUCK_DATABASE ]] && printf "Fuck you!\n" > $FUCK_DATABASE
+[[ -z "$*" ]] && fuck_reply $FUCK_DATABASE
 
-if [[ "$1" = "add" ]]
-then
-	if [[ "$2" ]]
-	then
-		if [[ ! -z $(egrep -i "^$2$" $FUCK_DATABASE) ]]
-		then
-			printf "\"$2\" had already existed.\n"
-			exit
+case "$1" in
+	+|add)
+		if [[ ! -z "$2" ]]; then
+			if [[ ! -z $(fgrep -x "$2" $FUCK_DATABASE) ]]; then
+				j4po "Already taught about '$2'.\n"
+			else
+				printf "$2\n" >> $FUCK_DATABASE
+				j4po "'$2' added to dirty lines collection.\n" 0
+			fi
+		else
+			j4e "$FUCK_USAGE"
 		fi
-		printf "$2\n" >> $FUCK_DATABASE
-		printf "\"$2\" added to dirty words.\n"
-	else
-		printf "Can't see the dirty word. Can't add. Sorry!\n"
-	fi
-elif [[ "$1" = "list" ]]
-then
-	cat $FUCK_DATABASE
-elif [[ ! "$@" ]]
-then
-	TOTALFUCK=$(cat $FUCK_DATABASE | wc -l)
-	sed -n "$((RANDOM % TOTALFUCK + 1))p" $FUCK_DATABASE
-else
-	printf "Usage: $(basename $0) [add | list]\n"
-fi
+		;;
+	-l|list)
+		cat $FUCK_DATABASE
+		;;
+	*)
+		j4e "$FUCK_USAGE"
+		;;
+esac
