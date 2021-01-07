@@ -25,7 +25,7 @@ else
 			break
 			;;
 		latest)
-			DIARY_DATE=`ls -t *.dry | head -1 | grep -o '\d\+'`
+			DIARY_DATE=`ls -t *.dry | head -1 | grep -o '[0-9]\+'`
 			break
 			;;
 		list|-l)
