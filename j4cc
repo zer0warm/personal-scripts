@@ -8,10 +8,6 @@ j4cc_usage() {
 	j4e "Usage: $(basename $0) [11|99|89] SOURCE(S) [-oOUTPUT] [-l <library> ...]" 1
 }
 j4cc_execute() {
-	if [[ $OSTYPE =~ .*darwin.* ]]; then
-		j4po "On apple, \`\`clang\" might be the actual compiler.\n"
-	fi
-
 	local COMMAND=$1
 	printf "$COMMAND\n"
 	$COMMAND
@@ -56,7 +52,7 @@ done
 [[ -z $SOURCES ]] && j4e "Source file(s) (*.c) is missing."
 [[ -z "$(ls $SOURCES 2> /dev/null)" ]] && j4e "Source file(s) doesn't exist."
 
-COMPILER="/usr/bin/env gcc"
+COMPILER="cc"
 WARNS=
 [[ -z $NO_WARNING ]] && WARNS="-Wall -Wextra"
 [[ -z $STDC ]] && STDC=11
