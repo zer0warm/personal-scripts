@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# Report basic system information (macOS)
+
+DATE=`date '+%Y-%m-%d'`
+DATE_TIME=`date '+%Y-%m-%d_%H.%M.%S'`
+DATE_FRIENDLY=`date`
+
+LOGS_DIR="$HOME/.sysrep"
+LOG_FILE="$LOGS_DIR/sysrep-log-$DATE_TIME"
+LOG_BREW_FILE="$LOGS_DIR/sysrep-log-brew-$DATE"
+
+update_brew() {
+	[ ! -f "$LOG_BREW_FILE" ] && brew update > "$LOG_BREW_FILE" 2>&1
+}
+
+extract_status() {
+	cat "$LOG_BREW_FILE" | grep 'installed.$' \
+		|| echo "Currently up-to-date."
+}
+
+brew_status() {
+	update_brew && extract_status
+}
+
+uptime_status() {
+	# First 10 bytes are always "XX:XX  up "
+	uptime | cut -b 11-
+}
+
+system_status() {
+	if [ ! -f "$LOG_FILE" ]; then
+		touch "$LOG_FILE"
+		echo "Date/time: $DATE_FRIENDLY" >> "$LOG_FILE"
+		echo "Uptime: `uptime_status`" >> "$LOG_FILE"
+		echo "Brew status: `brew_status`" >> "$LOG_FILE"
+	fi
+	cat "$LOG_FILE"
+}
+
+[ ! -d $LOGS_DIR ] && mkdir $LOGS_DIR
+
+system_status
