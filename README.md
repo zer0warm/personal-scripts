@@ -8,3 +8,4 @@ A handful of scripts I've written for myself, resolving my own problems
 |3 |[j4cc](j4cc)  |Compile C source files (single at once) with zero effort|
 |4 |[readme](readme)|Report executables found in $HOME/bin, and their summary|
 |5 |[sysrep](sysrep)|Report basic system information (macOS)|
+|6 |[pnews](pnews)|Fetch petrol prices|
