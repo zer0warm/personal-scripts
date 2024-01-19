@@ -55,7 +55,7 @@ done
 COMPILER="cc"
 WARNS=
 [[ -z $NO_WARNING ]] && WARNS="-Wall -Wextra"
-[[ -z $STDC ]] && STDC=11
+[[ -z $STDC ]] && STDC=99
 [[ -z $OUTPUT ]] && OUTPUT="-o $(echo $SOURCES | cut -f 1 -d .).out"
 
 COMMAND="$COMPILER $WARNS -std=c$STDC $SOURCES $LIBS $OUTPUT"

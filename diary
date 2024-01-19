@@ -5,8 +5,13 @@
 . j4tools
 
 DIARY_PATH="$HOME/j4k1ro-stuff/diary"
-DIARY_EDITOR="/Applications/MacVim.app/Contents/bin/vim"
 DIARY_USAGE="Usage: $(basename $0) [--path] [on <ddmmyy> | latest | list]"
+DIARY_EDITOR=
+if [ -n "$EDITOR" ]; then
+	DIARY_EDITOR="$EDITOR"
+else
+	DIARY_EDITOR="nvim"
+fi
 
 # Go to diary "warehouse" for easier interactions
 mkdir -p $DIARY_PATH && cd $DIARY_PATH
