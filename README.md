@@ -9,3 +9,4 @@ A handful of scripts I've written for myself, resolving my own problems
 |4 |[readme](readme)|Report executables found in $HOME/bin, and their summary|
 |5 |[sysrep](sysrep)|Report basic system information (macOS)|
 |6 |[pnews](pnews)|Fetch petrol prices|
+|7 |[udef.ps1](udef.ps1)|Look up words on [UrbanDictionary](https://www.urbandictionary.com)|
