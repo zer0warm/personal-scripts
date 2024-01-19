@@ -1,5 +1,5 @@
 # personal-scripts
-A handful of scripts I've written for myself, resolving my own problems
+A handful of scripts I've written for myself, resolving my own problems.
 
 |# |Script|Summary|
 |--|------|-------|
@@ -10,3 +10,4 @@ A handful of scripts I've written for myself, resolving my own problems
 |5 |[sysrep](sysrep)|Report basic system information (macOS)|
 |6 |[pnews](pnews)|Fetch petrol prices|
 |7 |[udef.ps1](udef.ps1)|Look up words on [UrbanDictionary](https://www.urbandictionary.com)|
+|8 |[malnews.ps1](malnews.ps1)|Fetch latest anime news from [MAL](https://myanimelist.net)|
