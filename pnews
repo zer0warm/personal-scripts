@@ -4,10 +4,9 @@
 
 URL=https://www.pvoil.com.vn/truyen-thong/tin-gia-xang-dau
 
-curl -Ls $URL -o tmp.html
+tmpfile=`mktemp -t pnews` || exit 1
+curl -Ls $URL -o $tmpfile
 
-printf "`grep "Giá điều chỉnh" tmp.html | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
-printf "`grep -A1 'RON 95' tmp.html | tr "\r\n" ' ' | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
-printf "`grep -A1 'RON 92' tmp.html | tr "\r\n" ' ' | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
-
-rm -i tmp.html
+printf "`grep "Giá điều chỉnh" $tmpfile | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
+printf "`grep -A1 'RON 95' $tmpfile | tr "\r\n" ' ' | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
+printf "`grep -A1 'RON 92' $tmpfile | tr "\r\n" ' ' | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
