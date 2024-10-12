@@ -4,9 +4,9 @@
 
 URL=https://www.pvoil.com.vn/truyen-thong/tin-gia-xang-dau
 
-tmpfile=`mktemp -t pnews` || exit 1
-curl -Ls $URL -o $tmpfile
-
-printf "`grep "Giá điều chỉnh" $tmpfile | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
-printf "`grep -A1 'RON 95' $tmpfile | tr "\r\n" ' ' | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
-printf "`grep -A1 'RON 92' $tmpfile | tr "\r\n" ' ' | sed -E -e 's/<[^>]*>//g' -e 's/(^ *| *$)//'`\n"
+curl -Ls $URL | awk '
+/Giá điều chỉnh/ { gsub(/<[^>]*>/, ""); sub(/^ */, ""); print $5, "-", $7 }
+/RON 95/ { flag=95; next }
+flag == 95 { gsub(/<[^>]*>/, ""); sub(/^ */, ""); print "RON 95:", $0; flag=0; next }
+/RON 92/ { flag=92; next }
+flag == 92 { gsub(/<[^>]*>/, ""); sub(/^ */, ""); print "RON 92:", $0; flag=0; exit }'
