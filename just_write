@@ -1,0 +1,43 @@
+#! /bin/zsh
+
+# Quickly note something on the fly
+
+# Exit on error
+set -e
+
+# Default note location
+vault=$HOME/writings/justwrite
+
+tag=
+case "$1" in
+  ask)
+    tag=question
+    shift
+    ;;
+  think)
+    tag=thought
+    shift
+    ;;
+  *)
+    tag=uncategorized
+    ;;
+esac
+
+notefile=${vault}/$(date +"%Y%m%d%H%M%S").txt
+
+if [[ -z "$*" ]]; then
+  $EDITOR $notefile
+else
+  content=$*
+  # Title is capitalized content
+  title=$(python3 -c 'print("'$content'".capitalize())')
+  cat > $notefile << EOF
+= $title
+
+$content
+
+#$tag
+EOF
+fi
+
+[[ -f $notefile ]] && print "Wrote $notefile" || exit 0

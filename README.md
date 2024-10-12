@@ -11,3 +11,4 @@ A handful of scripts I've written for myself, resolving my own problems.
 |6 |[pnews](pnews)|Fetch petrol prices|
 |7 |[udef.ps1](udef.ps1)|Look up words on [UrbanDictionary](https://www.urbandictionary.com)|
 |8 |[malnews.ps1](malnews.ps1)|Fetch latest anime news from [MAL](https://myanimelist.net)|
+|9 |[just_write](just_write)|Quick thought capture|
