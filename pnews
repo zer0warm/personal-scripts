@@ -5,7 +5,7 @@
 URL=https://www.pvoil.com.vn/truyen-thong/tin-gia-xang-dau
 
 curl -Ls $URL | awk '
-/Giá điều chỉnh/ { gsub(/<[^>]*>/, ""); sub(/^ */, ""); print $5, "-", $7 }
+/Giá điều chỉnh/ { gsub(/<[^>]*>/, ""); sub(/^ */, ""); print "Since", $5, "on", $7 }
 /RON 95/ { flag=95; next }
 flag == 95 { gsub(/<[^>]*>/, ""); sub(/^ */, ""); print "RON 95:", $0; flag=0; next }
 /RON 92/ { flag=92; next }
