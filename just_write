@@ -29,6 +29,7 @@ if [[ -z "$*" ]]; then
   $EDITOR $notefile
 else
   content=$*
+  [[ $tag = question ]] && content=$content'?'
   # Title is capitalized content
   title=$(python3 -c 'print("'$content'".capitalize())')
   cat > $notefile << EOF
