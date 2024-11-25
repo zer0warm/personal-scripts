@@ -7,6 +7,7 @@ set -e
 
 # Default note location
 vault=$HOME/writings/justwrite
+[[ ! -d $vault ]] && mkdir -p $vault
 
 tag=
 case "$1" in
@@ -26,7 +27,7 @@ esac
 notefile=${vault}/$(date +"%Y%m%d%H%M%S").txt
 
 if [[ -z "$*" ]]; then
-  $EDITOR $notefile
+  $VISUAL $notefile
 else
   content=$*
   [[ $tag = question ]] && content=$content'?'
