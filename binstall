@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Install an executable to ~/.local/bin by symbolic linking
+
+instdir=~/.local/bin
+prog_noext=${1%.*}
+
+if [[ -f $instdir/$prog_noext ]]; then
+	printf "$prog_noext exists in $instdir"
+	if [[ -h $instdir/$prog_noext ]]; then
+		printf ' and is a symbolic link'
+	fi
+	printf ".\n"
+elif [[ -f "$PWD/$1" ]]; then
+	if [[ ! -x "$PWD/$1" ]]; then chmod +x "$PWD/$1"; fi
+	ln -s "$PWD/$1" $instdir/$prog_noext
+else
+	printf "$1 does not exist in the current directory.\n"
+fi
