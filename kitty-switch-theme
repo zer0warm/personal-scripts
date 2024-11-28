@@ -1,0 +1,18 @@
+#! /bin/zsh
+
+# Switch between dark and light theme in kitty
+
+typeset -A themes
+themes=([dark]="Tokyo Night" [light]="Tokyo Night Day")
+
+case $(uname) in
+	Linux)
+		dark=$(gtk-query-settings prefer-dark-theme | grep -i true)
+		;;
+esac
+
+if [[ -n $dark ]]; then
+	(set -x; kitten themes ${themes[dark]})
+else
+	(set -x; kitten themes ${themes[light]})
+fi
