@@ -9,6 +9,9 @@ case $(uname) in
 	Linux)
 		dark=$(gtk-query-settings prefer-dark-theme | grep -i true)
 		;;
+  Darwin)
+    dark=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+    ;;
 esac
 
 if [[ -n $dark ]]; then
