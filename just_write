@@ -5,6 +5,10 @@
 # Exit on error
 set -e
 
+# Find editor
+editor=${VISUAL:-${EDITOR:-nvim}}
+if ! which $editor >/dev/null 2>&1; then exit 1; fi
+
 # Default note location
 vault=$HOME/writings/justwrite
 [[ ! -d $vault ]] && mkdir -p $vault
@@ -27,7 +31,7 @@ esac
 notefile=${vault}/$(date +"%Y%m%d%H%M%S").txt
 
 if [[ -z "$*" ]]; then
-  $VISUAL $notefile
+  $editor $notefile
 else
   content=$*
   [[ $tag = question ]] && content=$content'?'
