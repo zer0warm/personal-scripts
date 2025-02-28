@@ -13,6 +13,21 @@ if ! which $editor >/dev/null 2>&1; then exit 1; fi
 vault=$HOME/writings/justwrite
 [[ ! -d $vault ]] && mkdir -p $vault
 
+# Non-editing commands
+case "$1" in
+# Browse notes, use fzf
+  browse)
+    oldpwd=$(pwd)
+    cd $vault
+    notefile=$(ls -t | while read note; do
+      print "$note: $(sed -n 1p $note | cut -c 3-)"
+    done | fzf | awk -F: '{print $1}')
+    $editor $notefile
+    cd $oldpwd
+    exit
+    ;;
+esac
+
 tag=
 case "$1" in
   ask)
