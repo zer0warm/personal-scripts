@@ -1,0 +1,33 @@
+#! /bin/zsh
+
+# Edit config of different programs
+
+config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
+editor=${VISUAL:-${EDITOR:-nvim}}
+
+config_config_path="$config_dir/config/config" 
+if [[ "$1" =~ "^--config=" ]] {
+  source ${1:9}
+  shift
+} elif [[ -f "$config_config_path" ]] {
+  source $config_config_path
+} else {
+  typeset -A config_map
+}
+
+config_map[config]="$HOME/locgit/zer0warm/personal-scripts/config" # self
+
+if (( $# != 1 )) {
+  print "Usage: ${0:t} prog_name"
+  exit 1
+}
+
+prog_name=$1
+config_path="${config_map[$prog_name]}"
+if [[ -z "$config_path" ]] {
+  print "${0:t}: Unrecognized program $prog_name"
+  print "List of known programs: ${(k)config_map}"
+  exit 1
+}
+
+$editor $config_path

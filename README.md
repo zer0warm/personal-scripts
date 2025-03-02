@@ -14,3 +14,4 @@ A handful of scripts I've written for myself, resolving my own problems.
 |9 |[just_write](just_write)|Quick thought capture|zsh|
 |10|[binstall](binstall)|Symlink binaries to `~/.local/bin`|bash|
 |11|[kitty-switch-theme](kitty-switch-theme)|Switch between dark and light mode in kitty|zsh|
+|12|config|Quick edit config files of various programs|zsh|
