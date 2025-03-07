@@ -5,6 +5,11 @@
 config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
 editor=${VISUAL:-${EDITOR:-nvim}}
 
+if [[ ! -d "$config_dir/config" ]] {
+  print "${0:t}: Created $config_dir/config."
+  mkdir -p "$config_dir/config"
+}
+
 config_config_path="$config_dir/config/config" 
 if [[ "$1" =~ "^--config=" ]] {
   source ${1:9}
@@ -15,7 +20,7 @@ if [[ "$1" =~ "^--config=" ]] {
   typeset -A config_map
 }
 
-config_map[config]="$HOME/locgit/zer0warm/personal-scripts/config" # self
+config_map[config]="$config_config_path"
 
 if (( $# != 1 )) {
   print "Usage: ${0:t} prog_name"
