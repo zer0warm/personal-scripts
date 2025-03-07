@@ -20,7 +20,7 @@ A handful of scripts I've written for myself, resolving my own problems.
 
 - binstall:
 ```sh
-export PATH="path/to/binstall:$PATH"
+./binstall binstall
 ```
 
 - just_write:
