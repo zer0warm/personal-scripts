@@ -15,3 +15,31 @@ A handful of scripts I've written for myself, resolving my own problems.
 |10|[binstall](binstall)|Symlink binaries to `~/.local/bin`|bash|
 |11|[kitty-switch-theme](kitty-switch-theme)|Switch between dark and light mode in kitty|zsh|
 |12|[config](config)|Quick edit config files of various programs|zsh|
+
+## Setup
+
+- binstall:
+```sh
+export PATH="path/to/binstall:$PATH"
+```
+
+- just_write:
+```sh
+alias jw="just_write"
+alias jb="just_write browse"
+alias ja="just_write ask"
+alias jt="just_write think"
+```
+
+- config:
+```sh
+# Bootstrap
+config
+
+# Configure
+cat >"${XDG_CONFIG_HOME:-$HOME/.config}/config/config" <<EOF
+typeset -A config_map=(
+  # [name]="config_path"
+)
+EOF
+```
