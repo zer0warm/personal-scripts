@@ -22,13 +22,14 @@ case "$1" in
     notefile=$(ls -t *.txt | while read note; do
       print "$note -- $(head -n 1 $note | cut -c 3-) ($(tail -n 1 $note))"
     done \
-      | fzf --preview='cat {1} | fmt -sw 80' \
-            --layout=reverse \
+      | fzf --layout=reverse \
             --border=bold \
             --border-label='scribbled notes' \
-            --header="Tags: $(tail -qn 1 *.txt | tr ' ' "\n" | sort | uniq | paste -sd' ')" \
+            --header="Tags:
+$(tail -qn 1 *.txt | tr ' ' "\n" | sort | uniq | paste -sd' ' - | fmt -sw $(( $(tput cols) - 10 )))" \
             --header-first \
-      | awk '{print $1}')
+            --cycle \
+            --accept-nth=1)
     # Exit early if nothing was selected
     if [[ -z "$notefile" ]]; then exit 1; fi
     $editor $notefile
