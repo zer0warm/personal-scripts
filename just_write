@@ -20,9 +20,14 @@ case "$1" in
     oldpwd=$(pwd)
     cd $vault
     notefile=$(ls -t *.txt | while read note; do
-      print "$note -- $(sed -n 1p $note | cut -c 3-)"
+      print "$note -- $(head -n 1 $note | cut -c 3-) ($(tail -n 1 $note))"
     done \
-      | fzf --preview="cat {1}" --layout=reverse --border=bold \
+      | fzf --preview='cat {1} | fmt -sw 80' \
+            --layout=reverse \
+            --border=bold \
+            --border-label='scribbled notes' \
+            --header="Tags: $(tail -qn 1 *.txt | tr ' ' "\n" | sort | uniq | paste -sd' ')" \
+            --header-first \
       | awk '{print $1}')
     # Exit early if nothing was selected
     if [[ -z "$notefile" ]]; then exit 1; fi
