@@ -22,16 +22,28 @@ if [[ "$1" =~ "^--config=" ]] {
 
 config_map[config]="$config_config_path"
 
+list_programs() {
+  print "List of known programs: ${(k)config_map}"
+}
+
 if (( $# != 1 )) {
   print "Usage: ${0:t} prog_name"
+  list_programs
   exit 1
 }
+
+case "$1" in
+  ls|list)
+    list_programs
+    exit 0
+    ;;
+esac
 
 prog_name=$1
 config_path="${config_map[$prog_name]}"
 if [[ -z "$config_path" ]] {
   print "${0:t}: Unrecognized program $prog_name"
-  print "List of known programs: ${(k)config_map}"
+  list_programs
   exit 1
 }
 
