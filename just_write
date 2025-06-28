@@ -29,7 +29,8 @@ case "$1" in
 $(tail -qn 1 *.txt | tr ' ' "\n" | sort | uniq | paste -sd' ' - | fmt -sw $(( $(tput cols) - 10 )))" \
             --header-first \
             --cycle \
-            --accept-nth=1)
+            --accept-nth=1 \
+            --no-sort)
     # Exit early if nothing was selected
     if [[ -z "$notefile" ]]; then exit 1; fi
     $editor $notefile
