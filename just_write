@@ -39,37 +39,6 @@ $(tail -qn 1 *.txt | tr ' ' "\n" | sort | uniq | paste -sd' ' - | fmt -sw $(( $(
     ;;
 esac
 
-tag=
-case "$1" in
-  ask)
-    tag=question
-    shift
-    ;;
-  think)
-    tag=thought
-    shift
-    ;;
-  *)
-    tag=uncategorized
-    ;;
-esac
-
 notefile=${vault}/$(date +"%Y%m%d%H%M%S").txt
-
-if [[ -z "$*" ]]; then
-  $editor $notefile
-else
-  content=$*
-  [[ $tag = question ]] && content=$content'?'
-  # Title is capitalized content
-  title=$(python3 -c 'print("'$content'".capitalize())')
-  cat > $notefile << EOF
-= $title
-
-$content
-
-#$tag
-EOF
-fi
-
+$editor $notefile
 [[ -f $notefile ]] && print "Wrote $notefile" || exit 0
