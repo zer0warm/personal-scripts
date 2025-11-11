@@ -4,9 +4,10 @@ $feed |
         Name = "#"
         Expression = {$feed.IndexOf($_)+1}
     }, @{
+	Name = "Published"
+	Expression = {(Get-Date $_.pubDate -Format "yyyy-MM-dd HH:mm:ss")}
+    },
+    @{
 	Name = "Title"
 	Expression = {$_.Title}
-    }, @{
-        Name = "Published"
-        Expression = {(Get-Date $_.pubDate -Format "ddd, dd-MMM-yy HH:mm:ss")}
     }
